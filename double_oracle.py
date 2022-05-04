@@ -256,7 +256,7 @@ def RARL_regret(park_params, agent_oracle, nature_oracle):
         if iter == n_iters - 1: break
         attractiveness = nature_oracle.best_response([agent_strategy], [1.], display=False)
 
-    return agent_eq, nature_eq
+    return agent_strategy
 
 def myopic(param_int, agent_oracle):
     """ regular myopic - can use whatever method to come up with policies. will need to evaluate based on minimax regret
@@ -300,7 +300,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--seed',         type=int, default=0, help='random seed')
     parser.add_argument('--n_eval',       type=int, default=100, help='number of points to evaluate agent reward')
-    parser.add_argument('--agent_train',    type=int, default=100, help='number of training iterations for agent')
+    parser.add_argument('--agent_train',  type=int, default=100, help='number of training iterations for agent')
     parser.add_argument('--nature_train', type=int, default=100, help='number of training iterations for nature')
     parser.add_argument('--max_epochs',   type=int, default=5, help='max num epochs to run double oracle')
     parser.add_argument('--n_perturb',    type=int, default=3, help='number of perturbations to add in each epoch')
@@ -315,9 +315,9 @@ if __name__ == '__main__':
     parser.add_argument('--budget',  type=int, default=5, help='agent budget')
     parser.add_argument('--horizon', type=int, default=5, help='agent planning horizon')
 
-    parser.add_argument('--interval', type=float, default=3, help='uncertainty interval max size')
-    parser.add_argument('--wildlife', type=int, default=1, help='wildlife option')
-    parser.add_argument('--deterrence', type=int, default=1, help='deterrence option')
+    parser.add_argument('--interval',   type=float, default=3, help='uncertainty interval max size')
+    parser.add_argument('--wildlife',   type=int,   default=1, help='wildlife option')
+    parser.add_argument('--deterrence', type=int,   default=1, help='deterrence option')
 
     parser.add_argument('--prefix', type=str, default='', help='filename prefix')
 
@@ -413,7 +413,7 @@ if __name__ == '__main__':
     baseline_RARL_regret_i = len(do.agent_strategies)
     start_time = time.time()
     for i in range(n_perturb+1):
-        RARL_regret_policy = maximin(do.park_params, do.agent_oracle)
+        RARL_regret_policy = RARL_regret(do.park_params, do.agent_oracle, do.nature_oracle)
         do.update_payoffs_agent(RARL_regret_policy)
     RARL_regret_time = (time.time() - start_time) / (n_perturb+1)
     print('baseline RARL_regret runtime {:.1f} seconds'.format(RARL_regret_time))
