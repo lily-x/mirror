@@ -132,7 +132,7 @@ class DoubleOracle:
                 perturbed_br = nature_br + perturb
                 print('  perturbed', np.round(perturbed_br, 3))
 
-                agent_perturbed_br = self.agent_oracle.best_response([nature_br], [1], display=False)
+                agent_perturbed_br = self.agent_oracle.best_response([perturbed_br], [1], display=False)
 
                 self.update_payoffs(perturbed_br, agent_perturbed_br)
 
